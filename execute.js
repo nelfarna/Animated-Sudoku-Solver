@@ -1,32 +1,33 @@
-execute = function() {
+(function() {
 
-		var canvas = document.getElementById('canvas');
-		var ctx = canvas.getContext('2d');
-		var gridHeight = 500;
+	var canvas = document.getElementById('canvas'),
+		ctx = canvas.getContext('2d'),
+		gridHeight = 500,
+		s = new Sudoku(9), // pass in numbers 2, 4, or 9 (# cells in block)
+		start, execTime;
 
-		canvas.width = canvasDLX.width = gridHeight;
-		canvas.height = canvasDLX.height = gridHeight;
+	canvas.width = canvas.height = gridHeight;
 
-		var s = new Sudoku(9); // choose numbers 2, 4, 9
-		s.drawGrid(gridHeight, ctx); // draw grid on canvas
+	s.drawGrid(ctx, gridHeight); // draw grid on canvas
 
-		s.initCells(); // initialize Sudoku grid, assign all cells to 0
+	s.initCells(); // initialize Sudoku grid, assign all cells to 0
 
-		s.buildSolution(s.cells, 0); // generate complete Sudoku solution
+	s.buildSolution(); // generate complete Sudoku solution
 
-		s.createPuzzle(3, s.cells); // create puzzle from solution
+	s.createPuzzle(3); // create puzzle from solution, pass in level of difficulty (1, 2, or 3)
 
-		s.printPuzzle(ctx, gridHeight); // print puzzle to canvas
+	s.printPuzzle(ctx, gridHeight); // print puzzle to canvas
 
-		var start = new Date().getTime(); // get start and end time for solving puzzle using brute-force
-		s.solve(s.puzzleCells, 0);
-		var end = new Date().getTime();
-		var time = end - start; // execution time for solving puzzle
-		console.log("Execution Time: " + time + " ms");
+    // get start and end time for solving puzzle using brute-force
+	start = +new Date(); 
 
-		s.printNodes(s.nodesList.first, 0, gridHeight, ctx);
+	s.solve();
 
-	};
+	execTime = +new Date() - start; // execution time for solving puzzle
 
-	execute();
+	console.log("Execution Time: " + execTime.toFixed(4) + " ms");
+
+	s.printNodes(ctx, gridHeight); // now animate the program building the solution
+
+})();
 	
